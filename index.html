@@ -14,8 +14,10 @@
 		<script type="text/javascript" src="js/js_main.js"></script>
 		<script type="text/javascript">
 			function deviceIsReady() {
+				
+				alert(window.device.model);
+				
 				alert('device is ready');
-				alert(device.model);
 			}
 		
             document.addEventListener("deviceready", deviceIsReady, false);
