@@ -1,5 +1,4 @@
 function populateDeviceDetails(){
-	alert('init');
 	$('#content_outer .device_details').html('Device Model: ' + device.model + '<br />' +
 		'Device Cordova: '  + device.cordova  + '<br />' +
 		'Device Platform: ' + device.platform + '<br />' +

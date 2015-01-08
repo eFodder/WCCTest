@@ -1,5 +1,5 @@
 html,body {
-	font-size:18px;
+	font-size:16px;
 	font-family:Arial, Helvetica, sans-serif;
 }
 h1 { color:#ffffff; margin:0; padding:0; font-size:1.5em; text-transform:lowercase; }
@@ -13,3 +13,4 @@ h1 { color:#ffffff; margin:0; padding:0; font-size:1.5em; text-transform:lowerca
 .content_inner.second { background-color:#f6e1ff; }
 .content_inner.third { background-color:#e7cc65 }
 .content_inner div { padding:1em; }
+.device_details { border-radius:1em; border:1px solid #000; padding:1em; margin-top:1em; }
