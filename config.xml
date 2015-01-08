@@ -2,7 +2,7 @@
     <widget xmlns   = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
         id          = "nz.govt.wcc.test1"
-        versionCode = "100" 
+        versionCode = "10" 
         version     = "1.0.0" >
 
     <!-- versionCode is optional and Android only -->
@@ -13,58 +13,13 @@
 
     <author href="http://www.efodder.net" email="rudi.rademacher@wcc.govt.nz">Rudi Rademacher</author>
       
-    <!-- ICONS -->
     
-    <!--<icon src="resources/icons/android/Mantee_MDPI_48.png" gap:platform="android" gap:density="mdpi" /> <!-- 48 pixels -->
-	<!--<icon src="resources/icons/android/Mantee_HDPI_72.png" gap:platform="android" gap:density="hdpi" /> <!-- 72 pixels -->
-    <!--<icon src="resources/icons/android/xhdpMantee_XHDPI_96.png" gap:platform="android" gap:density="xhdpi" /> <!-- 96 pixels -->
-    <!--<icon src="resources/icons/android/Mantee_XXHDPI_144.png" gap:platform="android" gap:density="xxhdpi" /> <!-- 144 pixels -->
-            
-    <!-- SPLASH SCREENS -->
-        
-    <!--<gap:splash src="resources/splash/android/Mantee_LDPI.png" gap:platform="android" gap:density="ldpi" /> <!-- 200x320 -->
-    <!--<gap:splash src="resources/splash/android/Mantee_MDPI.png" gap:platform="android" gap:density="mdpi" /> <!-- 320x480 -->
-    <!--<gap:splash src="resources/splash/android/Mantee_HDPI.png" gap:platform="android" gap:density="hdpi" /> <!-- 480x800 -->
-    <!--<gap:splash src="resources/splash/android/Mantee_XHDPI.png" gap:platform="android" gap:density="xhdpi" /> <!-- 720x1280 -->
-
     <!-- PLATFORM SELECTION -->
 
     <gap:platform name="android" />
 	<gap:platform name="ios" />
-	<gap:platform name="wp8" />
+	<gap:platform name="winphone" />
         
-    <!-- GENERAL PREFERENCES -->
-        
-    <preference name="orientation" value="default" />
-    <preference name="fullscreen" value="true" /> <!-- remove the upper bar on iOS and Android -->
-      
-    <!-- ANDROID PREFERENCES -->
-        
-    <preference name="android-minSdkVersion" value="7" /> <!-- minimum Android 2.1 -->
-    <!-- <preference name="android-maxSdkVersion" value="19" /> maximum Android 4.4 -->
-    <preference name="android-targetSdkVersion" value="19" /> <!-- targeting Android 4.4 -->
-    <preference name="android-installLocation" value="auto" />
-    <preference name="android-windowSoftInputMode" value="stateVisible|adjustResize" />
-    <preference name="splash-screen-duration" value="5000" />
-
-    <preference name="load-url-timeout" value="20000" />
-        
-    <!-- PHONEGAP API FEATURES PREFERENCES -->
-        
-    <preference name="permissions" value="none"/>
-	
-	<feature name="http://api.phonegap.com/1.0/network"/>
-    <!--
-    <feature name="http://api.phonegap.com/1.0/battery"/>
-    <feature name="http://api.phonegap.com/1.0/camera"/>
-    <feature name="http://api.phonegap.com/1.0/contacts"/>
-    <feature name="http://api.phonegap.com/1.0/file"/>
-    <feature name="http://api.phonegap.com/1.0/geolocation"/>
-    <feature name="http://api.phonegap.com/1.0/media"/>
-    <feature name="http://api.phonegap.com/1.0/network"/>
-    <feature name="http://api.phonegap.com/1.0/notification"/>
-    -->
-
     <access origin="*" />
 
 </widget>
