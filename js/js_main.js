@@ -8,8 +8,8 @@ $(document).ready(function(){
 		
 		var thisColour = $(this).parent().css('background-color');
 		$('#head_outer h1').css('color',thisColour);
-	});
-	
-	var phoneModel = window.device.model;
-	alert('You are using a ' + phoneModel);
+		
+		var phoneModel = device.model;
+		alert('You are using a ' + phoneModel);
+	});	
 })
