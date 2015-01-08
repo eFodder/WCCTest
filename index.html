@@ -7,12 +7,17 @@
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 		<title>Really Really Basic Site</title>				
-		<script type="text/javascript" src="phonegap.js"></script>		
+		<script type="text/javascript" src="cordova.js"></script>		
         <script type="text/javascript" src="js/index.js"></script>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script type="text/javascript" src="js/js_main.js"></script>
 		<script type="text/javascript">
-            app.initialize();			
+            document.addEventListener("deviceready", onDeviceReady, true);
+			
+			function onDeviceReady(){
+				var phone = device.model;
+				alert(phone);
+			}
         </script>
 		<link rel="stylesheet" type="text/css" href="css/css_main.css"/>
 		<link rel="stylesheet" type="text/css" media='screen and (min-width:0px) and (max-width:500px)' href="css/css_small.css"/>
