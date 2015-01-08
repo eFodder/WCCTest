@@ -11,8 +11,5 @@ $(document).ready(function(){
 		
 		alert('test alert');
 		
-		alert(device.model);
-		
-		alert('still here');
 	});	
 })
