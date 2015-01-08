@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="cordova.js"></script>		
         <script type="text/javascript" src="js/index.js"></script>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 		<script type="text/javascript" src="js/js_main.js"></script>
 		<script type="text/javascript">
             document.addEventListener("deviceready", onDeviceReady, true);
@@ -24,24 +25,20 @@
 	</head>
 	
 	<body>
-		<div id="body_main">
-			<div id="body_inner">
-				<div id="body_content">
-					<div id="head_outer">
-						<h1>Really Basic Page</h1>
-					</div>
-					<div id="content_outer">
-						<div class="content_inner first">
-							<div>First Content Panel</div>
-						</div>
-						<div class="content_inner second">
-							<div>Second Content Panel</div>
-						</div>
-						<div class="content_inner third">
-							<div>Third Content Panel</div>
-						</div>					
-					</div>
+		<div data-role="page" id="body_content">
+			<div data-role="header" id="head_outer">
+				<h1>Really Basic Page</h1>
+			</div>
+			<div data-role="main" id="content_outer">
+				<div class="content_inner first">
+					<div>First Content Panel</div>
 				</div>
+				<div class="content_inner second">
+					<div>Second Content Panel</div>
+				</div>
+				<div class="content_inner third">
+					<div>Third Content Panel</div>
+				</div>					
 			</div>
 		</div>
 	</body>
