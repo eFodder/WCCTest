@@ -1,15 +1,11 @@
-/*$(document).ready(function(){
-	$('.content_inner div').click(function(){
-		$('.content_inner').each(function(){
-			$(this).css('color','#000');
-		});
-		
-		$(this).parent().css('color','#fff');
-		
-		var thisColour = $(this).parent().css('background-color');
-		$('#head_outer h1').css('color',thisColour);
-		
-		alert('test alert');
-		
-	});	
-})*/
+function populateDeviceDetails(){
+	$('#content_outer .device_details').HTML('Device Model: '    + device.model    + '<br />' +
+                            'Device Cordova: '  + device.cordova  + '<br />' +
+                            'Device Platform: ' + device.platform + '<br />' +
+                            'Device UUID: '     + device.uuid     + '<br />' +
+                            'Device Version: '  + device.version  + '<br />');
+}
+
+function fireDeviceReady(){
+	populateDeviceDetails();
+}
