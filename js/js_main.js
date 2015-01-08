@@ -10,5 +10,7 @@ $(document).ready(function(){
 		$('#head_outer h1').css('color',thisColour);
 		
 		alert('test alert');
+		
+		alert(device.model);
 	});	
 })
