@@ -19,6 +19,10 @@
     <gap:platform name="android" />
 	<gap:platform name="ios" />
 	<gap:platform name="winphone" />
+	
+	<feature name="Device">
+		<param name="android-package" value="org.apache.cordova.device.Device" />
+	</feature>
         
     <access origin="*" />
 
