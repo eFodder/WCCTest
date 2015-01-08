@@ -17,12 +17,18 @@
     <!-- PLATFORM SELECTION -->
 
     <gap:platform name="android" />
-	<gap:platform name="ios" />
-	<gap:platform name="winphone" />
+	<!--<gap:platform name="ios" />
+	<gap:platform name="winphone" />-->
 	
-	<feature name="Device">
-        <param name="android-package" value="org.apache.cordova.device.Device" />
-    </feature>
+	<feature name="http://api.phonegap.com/1.0/battery"/>
+    <feature name="http://api.phonegap.com/1.0/camera"/>
+    <feature name="http://api.phonegap.com/1.0/contacts"/>
+    <feature name="http://api.phonegap.com/1.0/file"/>
+    <feature name="http://api.phonegap.com/1.0/geolocation"/>
+    <feature name="http://api.phonegap.com/1.0/media"/>
+    <feature name="http://api.phonegap.com/1.0/network"/>
+    <feature name="http://api.phonegap.com/1.0/notification"/>
+	<feature name="http://api.phonegap.com/1.0/device"/>
         
     <access origin="*" />
 
