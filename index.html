@@ -13,12 +13,11 @@
 		<script type="text/javascript" src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 		<script type="text/javascript" src="js/js_main.js"></script>
 		<script type="text/javascript">
-            document.addEventListener("deviceready", onDeviceReady, true);
-			
-			function onDeviceReady(){
-				var phone = device.model;
-				alert(phone);
+			function deviceIsReady() {
+				alert('device is ready');
 			}
+		
+            document.addEventListener("deviceready", deviceIsReady, false);
         </script>
 		<link rel="stylesheet" type="text/css" href="css/css_main.css"/>
 		<link rel="stylesheet" type="text/css" media='screen and (min-width:0px) and (max-width:500px)' href="css/css_small.css"/>

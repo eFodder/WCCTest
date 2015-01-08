@@ -1,4 +1,4 @@
-$(document).ready(function(){
+/*$(document).ready(function(){
 	$('.content_inner div').click(function(){
 		$('.content_inner').each(function(){
 			$(this).css('color','#000');
@@ -12,4 +12,4 @@ $(document).ready(function(){
 		alert('test alert');
 		
 	});	
-})
+})*/
