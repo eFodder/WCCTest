@@ -23,6 +23,7 @@
 	<preference name="permissions" value="none"/>
 	
 	<gap:plugin name="org.apache.cordova.device" />
+	<gap:plugin name="org.apache.cordova.camera" />
         
     <access origin="*" />
 

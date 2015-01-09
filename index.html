@@ -26,10 +26,15 @@
 			<div id="content_outer">
 				<div class="spoof-menu">
 					<div class="content_inner first">
-						<div>First Content Panel</div>
+						<div>
+							<button onclick="capturePhoto();">Capture Photo</button><br>
+							<button onclick="capturePhotoEdit();">Capture Editable Photo</button><br>
+							<button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">From Photo Library</button><br>
+							<button onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">From Photo Album</button><br>
+						</div>
 					</div>
 					<div class="content_inner second">
-						<div>Second Content Panel</div>
+						<div><button id="btn-location">Get Location</button></div>
 					</div>
 					<div class="content_inner third">
 						<div>Third Content Panel</div>
@@ -38,6 +43,8 @@
 				<div class="device_details">
 					Loading device properties...
 				</div>
+				<img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
+				<img style="display:none;" id="largeImage" src="" />
 			</div>
 			<div id="foot-outer">
 				<div id="foot-inner">This has been a quick demo site</div>
