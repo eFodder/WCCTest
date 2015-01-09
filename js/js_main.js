@@ -44,36 +44,36 @@ function onPhotoURISuccess(imageURI) {
 // A button will call this function
 function capturePhoto() {
   // Take picture using device camera and retrieve image as base64-encoded string
-  navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
+  navigator.camera.getPicture(onPhotoDataSuccess, onCameraFail, { quality: 50,
 	destinationType: destinationType.DATA_URL });
 }
 
 // A button will call this function
 function capturePhotoEdit() {
   // Take picture using device camera, allow edit, and retrieve image as base64-encoded string
-  navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 20, allowEdit: true,
+  navigator.camera.getPicture(onPhotoDataSuccess, onCameraFail, { quality: 20, allowEdit: true,
 	destinationType: destinationType.DATA_URL });
 }
 
 // A button will call this function
 function getPhoto(source) {
   // Retrieve image file location from specified source
-  navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
+  navigator.camera.getPicture(onPhotoURISuccess, onCameraFail, { quality: 50,
 	destinationType: destinationType.FILE_URI,
 	sourceType: source });
 }
 
 // Called if something bad happens.
-function onFail(message) {
+function onCameraFail(message) {
   alert('Failed because: ' + message);
 }
 
 function getCurrentPosition() {
-	navigator.geolocation.getCurrentPosition(onSuccess, onError);
+	navigator.geolocation.getCurrentPosition(onPositionSuccess, onPositionError);
 }
 
 // onSuccess Geolocation
-function onSuccess(position) {
+function onPositionSuccess(position) {
 	$('#location-output').html(
 		'Latitude: '           + position.coords.latitude              + '<br />' +
 		'Longitude: '          + position.coords.longitude             + '<br />' +
@@ -86,23 +86,23 @@ function onSuccess(position) {
 }
 
 // onError Callback receives a PositionError object
-function onError(error) {
+function onPositionError(error) {
 	$('#location-output').html('Unable to obtain position:<br>' + 
 		'code: '    + error.code    + '<br>' +
 		'message: ' + error.message + '<br>');
 }
 
 function getCompass() {
-	navigator.compass.getCurrentHeading(onSuccess, onError);
+	navigator.compass.getCurrentHeading(onCompassSuccess, onCompassError);
 }
 
 // onSuccess: Get the current heading
-function onSuccess(heading) {
+function onCompassSuccess(heading) {
 	$('#compass-output').html('Heading: ' + heading.magneticHeading);
 }
 
 // onError: Failed to get the heading
-function onError(compassError) {
+function onCompassError(compassError) {
 	$('#compass-output').html('Unable to find compass heading:<br> Compass Error: ' + compassError.code);
 }
 
@@ -110,7 +110,6 @@ function fireDeviceReady(){
 	//Setup photo capture variables
 	pictureSource=navigator.camera.PictureSourceType;
     destinationType=navigator.camera.DestinationType;
-	alert('boo');
 	
 	populateDeviceDetails();
 }
