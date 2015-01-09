@@ -17,8 +17,9 @@
     <!-- PLATFORM SELECTION -->
 
     <gap:platform name="android" />
-	<!--<gap:platform name="ios" />
-	<gap:platform name="winphone" />-->
+	<gap:platform name="winphone" />
+	<!--<gap:platform name="ios" />-->
+	
 	
 	<preference name="permissions" value="none"/>
 	
