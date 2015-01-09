@@ -92,6 +92,20 @@ function onError(error) {
 		'message: ' + error.message + '<br>');
 }
 
+function getCompass() {
+	navigator.compass.getCurrentHeading(onSuccess, onError);
+}
+
+// onSuccess: Get the current heading
+function onSuccess(heading) {
+	$('#compass-output').html('Heading: ' + heading.magneticHeading);
+}
+
+// onError: Failed to get the heading
+function onError(compassError) {
+	$('#compass-output').html('Unable to find compass heading:<br> Compass Error: ' + compassError.code);
+}
+
 function fireDeviceReady(){
 	//Setup photo capture variables
 	pictureSource=navigator.camera.PictureSourceType;

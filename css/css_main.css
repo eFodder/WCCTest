@@ -1,6 +1,8 @@
 html,body {
 	font-size:16px;
 	font-family:Arial, Helvetica, sans-serif;
+	margin:0;
+	padding:0;
 }
 h1 { color:#ffffff; margin:0; padding:0; font-size:1.5em; text-transform:lowercase; }
 #body_content { background-color:#fff; border-radius:1em; padding:1em; }
@@ -15,5 +17,5 @@ h1 { color:#ffffff; margin:0; padding:0; font-size:1.5em; text-transform:lowerca
 .content_inner div button { border:1px solid #c1e1c9; border-radius:0.5em; background-color:#fff; color:#666; padding:0.5em; font-weight:bold; }
 .device_details { clear:both; border-radius:0.5em; border:1px solid #000; padding:1em; margin-top:1em; }
 
-#foot-outer { position:relative; bottom:0px; left:0px; width:100%; }
-#foot-inner { margin:0.2em 1em 0.2em 1em; padding:1em; background-color:#c1e1c9; border-radius:1em; }
+#foot-outer { position:relative; width:100%; margin-top:1em; }
+#foot-inner { padding:1em; background-color:#c1e1c9; border-radius:1em; color:#fff; font-size:0.9em; }
