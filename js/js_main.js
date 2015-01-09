@@ -10,7 +10,6 @@ var pictureSource;   // picture source
 var destinationType; // sets the format of returned value
 
 // Called when a photo is successfully retrieved
-//
 function onPhotoDataSuccess(imageData) {
 	// Uncomment to view the base64-encoded image data
 	// console.log(imageData);
@@ -49,21 +48,6 @@ function capturePhoto() {
 	destinationType: destinationType.DATA_URL });
 }
 
-// A button will call this function
-function capturePhotoEdit() {
-  // Take picture using device camera, allow edit, and retrieve image as base64-encoded string
-  navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 20, allowEdit: true,
-	destinationType: destinationType.DATA_URL });
-}
-
-// A button will call this function
-function getPhoto(source) {
-  // Retrieve image file location from specified source
-  navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
-	destinationType: destinationType.FILE_URI,
-	sourceType: source });
-}
-
 // Called if something bad happens.
 function onFail(message) {
   alert('Failed because: ' + message);
@@ -73,6 +57,7 @@ function fireDeviceReady(){
 	//Setup photo capture variables
 	pictureSource=navigator.camera.PictureSourceType;
     destinationType=navigator.camera.DestinationType;
+	alert('boo');
 	
 	populateDeviceDetails();
 }
