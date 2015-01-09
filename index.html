@@ -7,8 +7,7 @@
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
 		<title>Really Really Basic Site</title>				
-		<script type="text/javascript" src="cordova.js"></script>		
-        <script type="text/javascript" src="js/index.js"></script>
+		<script type="text/javascript" src="cordova.js"></script>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script type="text/javascript" src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 		<script type="text/javascript" src="js/js_main.js"></script>
@@ -16,6 +15,7 @@
 			// Wait for device API libraries to load
 			document.addEventListener("deviceready", fireDeviceReady, false);
         </script>
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
 		<link rel="stylesheet" type="text/css" href="css/css_main.css"/>
 		<link rel="stylesheet" type="text/css" media='screen and (min-width:0px) and (max-width:500px)' href="css/css_small.css"/>
 	</head>
@@ -26,18 +26,23 @@
 				<h1>Really Basic Page</h1>
 			</div>
 			<div data-role="main" id="content_outer">
-				<div class="content_inner first">
-					<div>First Content Panel</div>
-				</div>
-				<div class="content_inner second">
-					<div>Second Content Panel</div>
-				</div>
-				<div class="content_inner third">
-					<div>Third Content Panel</div>
+				<div class="spoof-menu">
+					<div class="content_inner first">
+						<div>First Content Panel</div>
+					</div>
+					<div class="content_inner second">
+						<div>Second Content Panel</div>
+					</div>
+					<div class="content_inner third">
+						<div>Third Content Panel</div>
+					</div>
 				</div>
 				<div class="device_details">
 					Loading device properties...
 				</div>
+			</div>
+			<div data-role="footer" id="foot-outer">
+				This has been a quick demo site
 			</div>
 		</div>
 	</body>
