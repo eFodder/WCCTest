@@ -33,7 +33,7 @@ h1 { color:#ffffff; margin:0; padding:0; font-size:1.5em; text-transform:lowerca
 #controls-menu { border-top:1px solid #aaa; padding:0.5em 0; display:none; }
 #map-controls .link {}
 .new-point { background-image:url(../img/blue-circle.png); background-size:100%; width:10px; height:10px; position:absolute; }
-div.line { transform-origin: 0 100%; height:1px; background:#fff; }
+.line { transform-origin: 0 100%; height:1px; background:#fff; }
 
 #point-controls { position:absolute; top:0px; right:0px; border:1px solid #666; background-color:#ccc; padding:0.5em; color:#555; margin-left:200px; display:none; }
 #point-controls .link { float:right; border:1px solid #999; padding:0.5em; }
