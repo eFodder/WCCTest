@@ -311,7 +311,7 @@ var addPoint = function(e) {
 		.addClass('creatingHS')
         .css({
           'position': 'absolute',
-          'transform-origin':'0 100%';
+          'transform-origin':'0 100%',
 		  'transform': transform,
 		  'top':p1y+'px',
 		  'left':p1x+'px'
