@@ -40,6 +40,6 @@ div.line { transform-origin: 0 100%; height:1px; background:#fff; }
 #point-controls .info { font-size:0.7em; }
 
 /* Hotspot content popup */
-.hotspot-content { padding:0.5em; }
+.hotspot-content { padding:0.5em; display:none; }
 .hotspot-content .panel-head { background-color:#960DFF; border-radius:0.25em; padding:1em; color:#fff; text-shadow:none; font-weight:bold; }
 .hotspot-content .panel-content { padding:1em 0; }

@@ -359,4 +359,6 @@ function setupMap() {
 	getCurrentPosition();
 	
 	$('#map-image').load(resizeMapImage);
+	
+	$(window).resize(resizeMapImage);
 }
