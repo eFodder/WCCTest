@@ -307,11 +307,12 @@ var addPoint = function(e) {
 		
 		var line = $('<div>')
         .insertBefore('.new-point:first')
-        .addClass('line')
+        .addClass('map-line')
 		.addClass('creatingHS')
         .css({
           'position': 'absolute',
-          'transform': transform,
+          'transform-origin':'0 100%';
+		  'transform': transform,
 		  'top':p1y+'px',
 		  'left':p1x+'px'
         })
