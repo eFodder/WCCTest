@@ -68,12 +68,12 @@ function onCameraFail(message) {
   alert('Failed because: ' + message);
 }
 
-function getCurrentPosition() {
-	navigator.geolocation.getCurrentPosition(onPositionSuccess, onPositionError);
+function getOldCurrentPosition() {
+	navigator.geolocation.getCurrentPosition(onOldPositionSuccess, onOldPositionError);
 }
 
 // onSuccess Geolocation
-function onPositionSuccess(position) {
+function onOldPositionSuccess(position) {
 	$('#location-output').html(
 		'Latitude: '           + position.coords.latitude              + '<br />' +
 		'Longitude: '          + position.coords.longitude             + '<br />' +
@@ -86,7 +86,7 @@ function onPositionSuccess(position) {
 }
 
 // onError Callback receives a PositionError object
-function onPositionError(error) {
+function onOldPositionError(error) {
 	$('#location-output').html('Unable to obtain position:<br>' + 
 		'code: '    + error.code    + '<br>' +
 		'message: ' + error.message + '<br>');
@@ -106,10 +106,21 @@ function onCompassError(compassError) {
 	$('#compass-output').html('Unable to find compass heading:<br> Compass Error: ' + compassError.code);
 }
 
+function toggleMenu() {
+	if ($('#controls-menu').css('display') == 'block') {
+		$('#controls-menu').css('display','none');
+	} else {
+		$('#controls-menu').css('display','block');
+	}
+}
+
 function fireDeviceReady(){
+	
 	//Setup photo capture variables
 	pictureSource=navigator.camera.PictureSourceType;
     destinationType=navigator.camera.DestinationType;
 	
-	populateDeviceDetails();
+	//populateDeviceDetails();
+	
+	$('#content_outer .device_details').html('boo');
 }

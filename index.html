@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
@@ -9,21 +9,30 @@
 		<title>Really Really Basic Site</title>				
 		<script type="text/javascript" src="cordova.js"></script>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+		
+		<script type="text/javascript" src="js/config.js"></script>
+		<script type="text/javascript" src="js/map.js"></script>
 		<script type="text/javascript" src="js/js_main.js"></script>
 		<script type="text/javascript">
 			// Wait for device API libraries to load
 			document.addEventListener("deviceready", fireDeviceReady, false);
+			
+			$(document).ready(setupMap);
         </script>
+		
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+		
 		<link rel="stylesheet" type="text/css" href="css/css_main.css"/>
 		<link rel="stylesheet" type="text/css" media='screen and (min-width:0px) and (max-width:500px)' href="css/css_small.css"/>
 	</head>
 	
 	<body>
-		<div id="body_content">
-			<div id="head_outer">
+		<!--<div data-role="page" class="body-content" id="homepage">
+			<div data-role="header" id="head_outer">
 				<h1>Really Basic Page</h1>
 			</div>
-			<div id="content_outer">
+			<div data-role="main" id="content_outer">
 				<div class="spoof-menu">
 					<div class="content_inner first">
 						<div>
@@ -34,13 +43,16 @@
 						</div>
 					</div>
 					<div class="content_inner second">
-						<div><button onclick="getCurrentPosition();" id="btn-location">Get Current Positon</button><br>
+						<div><button onclick="getOldCurrentPosition();" id="btn-location">Get Current Positon</button><br>
 							<div id="location-output"></div>						
+						</div>
+						<div><button onclick="getCompass();" id="btn-compass">Get Compass Heading</button><br>
+							<div id="compass-output"></div>						
 						</div>
 					</div>
 					<div class="content_inner third">
-						<div><button onclick="getCompass();" id="btn-compass">Get Compass Heading</button><br>
-							<div id="compass-output"></div>						
+						<div>
+							<a href="#mappage" data-transition="slide">Go to Map Page</a>					
 						</div>
 					</div>
 				</div>
@@ -50,8 +62,25 @@
 				<img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
 				<img style="display:none;" id="largeImage" src="" />
 			</div>
-			<div id="foot-outer">
+			<div data-role="footer" id="foot-outer">
 				<div id="foot-inner">This has been a quick demo site brought to you by me</div>
+			</div>
+		</div>-->
+		<!-- Page 2 (Map poc) -->
+		<div data-role="page" class="body-content" id="mappage">
+			<div id="map-outer">
+				<img src="#" id="map-image"/>
+				<div id="hotspot-holder"></div>				
+			</div>
+			<div id="map-controls">
+				<div onclick="toggleMenu()" class="link">Controls</div>
+				<div id="controls-menu">
+					<div onclick="createHotspot()" class="link">Create Hotspot</div>
+				</div>
+			</div>
+			<div id="point-controls">
+				<div onclick="closeHotspot()"class="link">Close Hotspot</div>
+				<div class="info">Closing the hotspot will automatically complete the shape.</div>
 			</div>
 		</div>
 	</body>

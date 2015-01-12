@@ -5,9 +5,9 @@ html,body {
 	padding:0;
 }
 h1 { color:#ffffff; margin:0; padding:0; font-size:1.5em; text-transform:lowercase; }
-#body_content { background-color:#fff; border-radius:1em; padding:1em; }
+#body_content { background-color:#fff; border-radius:1em; padding:1em; width:100%; height:100%; }
 #head_outer { background-color:#c1e1c9; padding:2em 1em 0.5em 1em; border-radius:1em; text-align:right; }
-#content_outer {  }
+#content_outer { height:100%; width:100%; }
 .spoof-menu { position:relative; clear:both; overflow:auto; width:100%; padding:1em 0 0 0; }
 .content_inner { float:left; width:32.66%; background-color:#d9f3fc; border-radius:0.5em; margin-left:1%; }
 .content_inner.first { margin-left:0; }
@@ -19,3 +19,27 @@ h1 { color:#ffffff; margin:0; padding:0; font-size:1.5em; text-transform:lowerca
 
 #foot-outer { position:relative; width:100%; margin-top:1em; }
 #foot-inner { padding:1em; background-color:#c1e1c9; border-radius:1em; color:#fff; font-size:0.9em; }
+
+/* Map styles */
+.map-outer { background-color:#aaa; }
+#currentUserPosition { position:absolute; width:10px; height:10px; background-color:#ff0000; }
+
+/* Hotspots */
+.hotspot-boundry { stroke:#960DFF; stroke-width:1; fill:#960DFF; fill-opacity:0.25; }
+.hotspot-title { position:absolute; font-weight:bold; color:#fff; text-shadow: 2px 2px #333; }
+
+/* Map controls */
+#map-controls { position:absolute; top:0px; left:0px; width:150px; border:1px solid #666; background-color:#ccc; padding:0.5em; color:#555; }
+#controls-menu { border-top:1px solid #aaa; padding:0.5em 0; display:none; }
+#map-controls .link {}
+.new-point { background-image:url(../img/blue-circle.png); background-size:100%; width:10px; height:10px; position:absolute; }
+div.line { transform-origin: 0 100%; height:1px; background:#fff; }
+
+#point-controls { position:absolute; top:0px; right:0px; border:1px solid #666; background-color:#ccc; padding:0.5em; color:#555; margin-left:200px; display:none; }
+#point-controls .link { float:right; border:1px solid #999; padding:0.5em; }
+#point-controls .info { font-size:0.7em; }
+
+/* Hotspot content popup */
+.hotspot-content { padding:0.5em; }
+.hotspot-content .panel-head { background-color:#960DFF; border-radius:0.25em; padding:1em; color:#fff; text-shadow:none; font-weight:bold; }
+.hotspot-content .panel-content { padding:1em 0; }
