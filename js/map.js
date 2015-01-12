@@ -48,6 +48,7 @@ function onPositionError(error) {
 		'code: '    + error.code    + '<br>' +
 		'message: ' + error.message + '<br>');*/
 	console.log('Unable to obtain position');
+	$('#tmp').append('Unable to obtain position'+'<br>');
 	
 	//Revert to debug while we are testing
 	currentLatitude = debug.latitude;
@@ -124,6 +125,7 @@ function setPositionValues() {
 	position.longRatio = position.mapWidth / (position.rightLong - position.leftLong);
 	
 	console.log(position);
+	$('#tmp').append(JSON.stringify(position)+'<br>');
 }
 
 // This function adds the geolocation icon to the map - called by resizeMapImage if location has been loaded, otherwise by onPositionSuccess
@@ -135,6 +137,7 @@ function setLatLongRatios() {
 			&& position.currentLong > position.leftLong
 			&& position.currentLong < position.rightLong) {
 		console.log('within map bounds');
+		$('#tmp').append('Within map bounds'+'<br>');
 		var iconTop = position.yPosition + 
 			((position.currentLat - position.topLat) * position.latRatio) 
 			- ($('#currentUserPosition').height() / 2);
@@ -295,6 +298,7 @@ var addPoint = function(e) {
 		var p2y = newHotspot.points[thisId].pageY;
 		
 		console.log(p1x+'-'+p1y+'-'+p2x+'-'+p2y);
+		$('#tmp').append('point=p1x-'+p1x+'- p1y-'+p1y+'- p2x-'+p2x+'- p2y-'+p2y+'<br>');
 		
 		//Calculate length, and angle of a line between two points, actually just creates a long thin div and rotates it. - relies on the div having a style of transform-origin: 0 100%; which will ensure that the line rotates from the center of the first point
 		var length = Math.sqrt((p1x-p2x)*(p1x-p2x) + (p1y-p2y)*(p1y-p2y));
@@ -315,6 +319,7 @@ var addPoint = function(e) {
 	}
 	
 	console.log(newHotspot);
+	$('#tmp').append(JSON.stringify(newHotspot)+'<br>');
 }
 
 //This function calculates a point passed as x/y (of the viewport) into the percentage position on the map - called by addPoint
