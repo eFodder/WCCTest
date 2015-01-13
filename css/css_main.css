@@ -21,7 +21,9 @@ h1 { color:#ffffff; margin:0; padding:0; font-size:1.5em; text-transform:lowerca
 #foot-inner { padding:1em; background-color:#c1e1c9; border-radius:1em; color:#fff; font-size:0.9em; }
 
 /* Map styles */
-.map-outer { background-color:#aaa; }
+#mappage { overflow:hidden; }
+#map-outer { background-color:#aaa; height:100%; width:100%; overflow:hidden; }
+#map-inner {  }
 #currentUserPosition { position:absolute; width:10px; height:10px; background-color:#ff0000; }
 
 /* Hotspots */
@@ -35,11 +37,18 @@ h1 { color:#ffffff; margin:0; padding:0; font-size:1.5em; text-transform:lowerca
 .new-point { background-image:url(../img/blue-circle.png); background-size:100%; width:10px; height:10px; position:absolute; }
 .map-line { height:1px; background:#fff; }
 
-#point-controls { position:absolute; top:0px; right:0px; border:1px solid #666; background-color:#ccc; padding:0.5em; color:#555; margin-left:200px; display:none; }
-#point-controls .link { float:right; border:1px solid #999; padding:0.5em; }
+#point-controls { padding:0.5em; color:#555; display:none; }
+#point-controls .link { border:1px solid #999; padding:0.5em; margin-top:0.5em }
 #point-controls .info { font-size:0.7em; }
 
 /* Hotspot content popup */
 .hotspot-content { padding:0.5em; display:none; }
 .hotspot-content .panel-head { background-color:#960DFF; border-radius:0.25em; padding:1em; color:#fff; text-shadow:none; font-weight:bold; }
 .hotspot-content .panel-content { padding:1em 0; }
+
+/* Zoom Controls */
+.zoom { position:absolute; right:0px; padding:1em; font-weight:bold; background-color:#333; border:1px solid #333; }
+.zoom-in { top:0px; }
+.zoom-out { bottom:0px; }
+.zoom.active { background-color:#ccc; }
+.zoom-level { position:absolute; right:0px; top:0px; width: 0;	height: 0; border-top: 1em solid transparent; border-right: 2em solid #fff; border-bottom: 1em solid transparent; }

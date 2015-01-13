@@ -13,10 +13,7 @@
 		
 		<script type="text/javascript" src="js/config.js"></script>
 		<script type="text/javascript" src="js/map.js"></script>
-		<script type="text/javascript" src="js/js_main.js"></script>
 		<script type="text/javascript">
-			// Wait for device API libraries to load
-			document.addEventListener("deviceready", fireDeviceReady, false);
 			
 			$(document).ready(setupMap);
         </script>
@@ -68,21 +65,27 @@
 		</div>-->
 		<!-- Page 2 (Map poc) -->
 		<div data-role="page" class="body-content" id="mappage">
+			<!-- map-outer will be an overflow frame hiding overflowing map -->
 			<div id="map-outer">
-				<img src="#" id="map-image"/>
-				<div id="hotspot-holder"></div>
-				<div id="tmp"></div>
+				<div id="map-inner">
+					<img src="#" id="map-image"/>
+					<div id="hotspot-holder"></div>
+				</div>
 			</div>
 			<div id="map-controls">
 				<div onclick="toggleMenu()" class="link">Controls</div>
 				<div id="controls-menu">
 					<div onclick="createHotspot()" class="link">Create Hotspot</div>
 				</div>
+				<div id="point-controls">					
+					<div class="info">Closing the hotspot will automatically complete the shape.</div>
+					<div onclick="closeHotspot()"class="link">Close Hotspot</div>
+				</div>
 			</div>
-			<div id="point-controls">
-				<div onclick="closeHotspot()"class="link">Close Hotspot</div>
-				<div class="info">Closing the hotspot will automatically complete the shape.</div>
-			</div>
+			<div class="zoom zoom-in active" onclick="zoomMapIn(true);">+</div>
+			<div class="zoom zoom-out active" onclick="zoomMapIn(false);">-</div>
+			<div class="zoom-level"></div>
+			
 		</div>
 	</body>
 </html>

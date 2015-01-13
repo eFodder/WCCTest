@@ -2,6 +2,7 @@ var currentLatitude = 0;
 var currentLongitude = 0;
 var locationLoaded = false;
 var mapSetup = false;
+var zoomLevel = 1;
 
 var newHotspot = { points:[] };
 
@@ -48,7 +49,6 @@ function onPositionError(error) {
 		'code: '    + error.code    + '<br>' +
 		'message: ' + error.message + '<br>');*/
 	console.log('Unable to obtain position');
-	$('#tmp').append('Unable to obtain position'+'<br>');
 	
 	//Revert to debug while we are testing
 	currentLatitude = debug.latitude;
@@ -63,47 +63,60 @@ function onPositionError(error) {
 // This function sizes the map to fit the viewport - initially called by setupMap
 function resizeMapImage() {
 	var img = $('#map-image');
-	var imageWidth = img.width();
-	var imageHeight = img.height();
+	img.css({  });
+	var imageWidth = img.outerWidth();
+	var imageHeight = img.outerHeight();
 	var imageRatio = imageWidth / imageHeight;
 	
-	if (imageWidth < $(window).width()) {
-		imageWidth = $(window).width();
+	$('#map-outer').css({ 'width':$(window).width()+'px', 'height':$(window).height()+"px", 'overflow':'hidden' });
+	// True size variables
+	var tWidth = $(window).width();
+	var tHeight = $(window).height();
+	// Size Constraints of inner panel based on the current zoom level - we will calculate based on these virtual figures.
+	var vWidth = $(window).width() * config['zoom'+zoomLevel];
+	var vHeight = $(window).height() * config['zoom'+zoomLevel];
+	
+	if (imageWidth < vWidth) {
+		imageWidth = vWidth;
 		imageHeight = imageWidth / imageRatio;
 	}
 	//Ratio based on width
-	var ratio = imageWidth / $(window).width();
+	var ratio = imageWidth / vWidth;
 	//Ratio based on height
-	if ($(window).height() < (imageHeight / ratio)) {
-		ratio = imageHeight / $(window).height();
+	if (vHeight < (imageHeight / ratio)) {
+		ratio = imageHeight / vHeight;
 	}
 	
 	var newWidth = imageWidth / ratio;
 	var newHeight = imageHeight / ratio;
 	
-	$(img).attr('width',newWidth);
-	$(img).attr('height',newHeight);
+	//Calculate positioning information based on the true screen sizes
+	var xPos = (tWidth - newWidth) / 2;
+	var yPos = (tHeight - newHeight) / 2;
 	
-	var xPos = ($(window).width() - newWidth) / 2;
-	var yPos = ($(window).height() - newHeight) / 2;
+	mapdata.xPosition = xPos;
+	mapdata.yPosition = yPos;
+	mapdata.mapWidth = newWidth;
+	mapdata.mapHeight = newHeight;
 	
-	position.xPosition = xPos;
-	position.yPosition = yPos;
-	position.mapWidth = newWidth;
-	position.mapHeight = newHeight;
+	/*mapdata.zoomX = mapdata.xPosition;
+	mapdata.zoomY = mapdata.yPosition;
+	mapdata.zoomWidth = mapdata.mapWidth;
+	mapdata.zoomHeight = mapdata.mapHeight;*/
 	
-	$(img).css({'position':'relative','left':xPos,'top':yPos});
+	$(img).css({ 'width':newWidth, 'height':newHeight, 'position':'relative', 'left':xPos, 'top':yPos });
 	
 	//Size hotspot holder to match -- we need to do this to catch click events
 	$('#hotspot-holder').css({
 			'position':'absolute',
-			'top':position.yPosition+'px',
-			'left':position.xPosition+'px',
-			'width':position.mapWidth+'px',
-			'height':position.mapHeight+'px'
+			'top':mapdata.yPosition+'px',
+			'left':mapdata.xPosition+'px',
+			'width':mapdata.mapWidth+'px',
+			'height':mapdata.mapHeight+'px'
 		});
 	
 	//Map is setup so we can add the hotspots to it - user position does not affect this
+	zoomControls();
 	drawHotspots();
 	
 	mapSetup = true;
@@ -114,41 +127,69 @@ function resizeMapImage() {
 
 // This function converts working lat/long values to positives and calculates ratios - called by setLatLongRatios
 function setPositionValues() {
-	position.currentLat = Math.abs(currentLatitude);
-	position.currentLong = Math.abs(currentLongitude);
-	position.topLat = Math.abs(config.topLat);
-	position.botLat = Math.abs(config.botLat);
-	position.leftLong = Math.abs(config.leftLong);
-	position.rightLong = Math.abs(config.rightLong);
+	mapdata.currentLat = Math.abs(currentLatitude);
+	mapdata.currentLong = Math.abs(currentLongitude);
+	mapdata.topLat = Math.abs(config.topLat);
+	mapdata.botLat = Math.abs(config.botLat);
+	mapdata.leftLong = Math.abs(config.leftLong);
+	mapdata.rightLong = Math.abs(config.rightLong);
 	
-	position.latRatio = position.mapHeight / (position.botLat - position.topLat);
-	position.longRatio = position.mapWidth / (position.rightLong - position.leftLong);
+	mapdata.latRatio = mapdata.mapHeight / (mapdata.botLat - mapdata.topLat);
+	mapdata.longRatio = mapdata.mapWidth / (mapdata.rightLong - mapdata.leftLong);	
+}
+
+// This function sets the zoom display of the map - called by resizeMapImage
+function zoomControls() {
+	console.log('Setting zoom control');
 	
-	console.log(position);
-	$('#tmp').append(JSON.stringify(position)+'<br>');
+	//The zoom arrow is floating on the right of the screen, this needs to have boundries (top/bottom) as well as increments to move by
+	mapdata.zoomIconHeight = $('.zoom-level').outerHeight();
+	mapdata.zoomTop = $('.zoom-in:first').outerHeight();
+	mapdata.zoomBot = $(window).height() - $('.zoom-out:first').outerHeight() - mapdata.zoomIconHeight;	
+	var zoomable = mapdata.zoomBot - mapdata.zoomTop;
+	mapdata.zoomIncrement = zoomable / config.zoomLevels;
+	
+	console.log(mapdata);
+	
+	//Current zoomicon position
+	var currentZoomPos = mapdata.zoomBot - ((zoomLevel - 1) * mapdata.zoomIncrement);
+	$('.zoom-level').css('top',currentZoomPos+'px');
+	
+}
+
+// This function performs a change in the zoom level, either zooming in one increment (true) or out (false) - called by user clicking the zoom controls
+function zoomMapIn(zoomIn) {
+	if(zoomIn){
+		if (zoomLevel == config.zoomLevels) { return; }
+		zoomLevel++;
+	} else {
+		if (zoomLevel == 1) { return; }
+		zoomLevel--;
+	}
+	
+	resizeMapImage();
 }
 
 // This function adds the geolocation icon to the map - called by resizeMapImage if location has been loaded, otherwise by onPositionSuccess
 function setLatLongRatios() {
 	setPositionValues();
 	
-	if (position.currentLat > position.topLat
-			&& position.currentLat < position.botLat
-			&& position.currentLong > position.leftLong
-			&& position.currentLong < position.rightLong) {
+	if (mapdata.currentLat > mapdata.topLat
+			&& mapdata.currentLat < mapdata.botLat
+			&& mapdata.currentLong > mapdata.leftLong
+			&& mapdata.currentLong < mapdata.rightLong) {
 		console.log('within map bounds');
-		$('#tmp').append('Within map bounds'+'<br>');
-		var iconTop = position.yPosition + 
-			((position.currentLat - position.topLat) * position.latRatio) 
-			- ($('#currentUserPosition').height() / 2);
-		var iconLeft = position.xPosition + 
-			((position.currentLong - position.leftLong) * position.longRatio)
-			- ($('#currentUserPosition').width() / 2);
+		var iconTop = mapdata.yPosition + 
+			((mapdata.currentLat - mapdata.topLat) * mapdata.latRatio) 
+			- ($('#currentUserPosition').outerHeight() / 2);
+		var iconLeft = mapdata.xPosition + 
+			((mapdata.currentLong - mapdata.leftLong) * mapdata.longRatio)
+			- ($('#currentUserPosition').outerWidth() / 2);
 		console.log('left = '+iconLeft+'\n top = '+iconTop);
 		
 		// We must have an icon div created in order to position it
 		if ($('#currentUserPosition').length == 0) {
-			$('#map-outer').append('<div id="currentUserPosition"></div>'); 
+			$('#map-inner').append('<div id="currentUserPosition"></div>'); 
 		}		
 		
 		$('#currentUserPosition').css({ 'top':iconTop+'px', 'left':iconLeft+'px'});
@@ -170,7 +211,7 @@ function drawHotspots() {
 		$('#hotspot-content').remove();
 		
 		
-		//Add to map-outer to the holder, this needs to be done with pure js as jquery does not play nicely
+		//Add to the holder, this needs to be done with pure js as jquery does not play nicely
 		var container = document.getElementById("hotspot-holder");
 		mapSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 		mapSvg.setAttribute("version", "1.2");
@@ -185,8 +226,8 @@ function drawHotspots() {
 		
 		$('#hotspot-map').css({
 			  'position': 'relative',
-			  'width':position.mapWidth+'px',
-			  'height':position.mapHeight+'px'
+			  'width':mapdata.mapWidth+'px',
+			  'height':mapdata.mapHeight+'px'
 			})
 			
 		for (var i = 0; i < mapHotspots.length; i++) {
@@ -207,7 +248,7 @@ function drawHotspots() {
 			hotspotPolygon.setAttribute("id", "hotspot-boundry-"+i);
 			hotspotPolygon.setAttribute("class", "hotspot-boundry");
 			hotspotPolygon.setAttribute("points", pointString);
-			hotspotPolygon.setAttribute("onclick", "$('#hotspot-content-"+i+"').popup(); $('#hotspot-content-"+i+"').popup('open');");
+			hotspotPolygon.setAttribute("onclick", "$('#hotspot-content-"+i+"').popup(); $('#hotspot-content-"+i+"').css('display','block'); $('#hotspot-content-"+i+"').popup('open');");
 			hotspotPolygon.setAttribute("data-rel", "popup");
 			mapSvg.appendChild(hotspotPolygon);
 			
@@ -222,8 +263,8 @@ function drawHotspots() {
 			$('#hotspot-titles').append('<div id="hotspot-title-'+i+'" class="hotspot-title">' + hotspot.name + '</div>')
 			var boundry = $('#hotspot-boundry-'+i);
 			$('#hotspot-title-'+i).css({ 
-				'left':boundry.position().left + (boundry[0].getBBox().width / 2) - ($('#hotspot-title-'+i).width() / 2),
-				'top':boundry.position().top + (boundry[0].getBBox().height / 2) - ($('#hotspot-title-'+i).height() / 2)
+				'left':boundry.position().left + (boundry[0].getBBox().width / 2) - ($('#hotspot-title-'+i).outerWidth() / 2),
+				'top':boundry.position().top + (boundry[0].getBBox().height / 2) - ($('#hotspot-title-'+i).outerHeight() / 2)
 			})
 		}
 			
@@ -274,8 +315,8 @@ var addPoint = function(e) {
 	//Add visual representation of point to the map
 	var newPoint = $('#map-image').parent().append('<div id="point' + thisId + '" class="new-point creatingHS"></div>');
 	var pointRef = $('#point' + thisId);
-	var xPoint = percentageAsPoint(xPos,false) + position.xPosition - (pointRef.width() / 2);
-	var yPoint = percentageAsPoint(yPos,true) + position.yPosition - (pointRef.height() / 2);
+	var xPoint = percentageAsPoint(xPos,false) + mapdata.xPosition - (pointRef.outerWidth() / 2);
+	var yPoint = percentageAsPoint(yPos,true) + mapdata.yPosition - (pointRef.outerHeight() / 2);
 	pointRef.css({ 'left':xPoint+'px','top':yPoint+'px' });
 	
 	var newPointObject = {
@@ -298,7 +339,6 @@ var addPoint = function(e) {
 		var p2y = newHotspot.points[thisId].pageY;
 		
 		console.log(p1x+'-'+p1y+'-'+p2x+'-'+p2y);
-		$('#tmp').append('point=p1x-'+p1x+'- p1y-'+p1y+'- p2x-'+p2x+'- p2y-'+p2y+'<br>');
 		
 		//Calculate length, and angle of a line between two points, actually just creates a long thin div and rotates it. - relies on the div having a style of transform-origin: 0 100%; which will ensure that the line rotates from the center of the first point
 		var length = Math.sqrt((p1x-p2x)*(p1x-p2x) + (p1y-p2y)*(p1y-p2y));
@@ -311,8 +351,8 @@ var addPoint = function(e) {
 		.addClass('creatingHS')
         .css({
           'position': 'absolute',
-          'transform-origin':'0 100%',
-		  'transform': transform,
+          'transform': transform,
+		  'transform-origin':'0 100%',
 		  'top':p1y+'px',
 		  'left':p1x+'px'
         })
@@ -320,17 +360,16 @@ var addPoint = function(e) {
 	}
 	
 	console.log(newHotspot);
-	$('#tmp').append(JSON.stringify(newHotspot)+'<br>');
 }
 
 //This function calculates a point passed as x/y (of the viewport) into the percentage position on the map - called by addPoint
 function pointAsPercentage(point, AsHeight) {
-	var thisPos = position.xPosition;
-	var size = position.mapWidth;
+	var thisPos = mapdata.xPosition;
+	var size = mapdata.mapWidth;
 	
 	if (AsHeight) {
-		thisPos = position.yPosition;
-		size = position.mapHeight;
+		thisPos = mapdata.yPosition;
+		size = mapdata.mapHeight;
 	}
 	
 	return (point - thisPos) / (size / 100);
@@ -338,9 +377,9 @@ function pointAsPercentage(point, AsHeight) {
 
 //This function converts a map position passed as a percentage into the pixel value of the map - called by addPoint
 function percentageAsPoint(percentage, AsHeight) {
-	var size = position.mapWidth;
+	var size = mapdata.mapWidth;
 	if (AsHeight) {
-		size = position.mapHeight;
+		size = mapdata.mapHeight;
 	}
 	return (size / 100) * percentage;
 }
