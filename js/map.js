@@ -373,9 +373,10 @@ function closeHotspot() {
 var addPoint = function(e) {
 	if (!isDragging) {
 		console.log('Adding Point');
-	
-		var xPos = pointAsPercentage(event.pageX, false);
-		var yPos = pointAsPercentage(event.pageY, true);
+		var xy = pointerEventToXY(e);
+		
+		var xPos = pointAsPercentage(xy.pageX, false);
+		var yPos = pointAsPercentage(xy.pageY, true);
 		
 		//Setup working vals
 		var thisId = newHotspot.points.length;
@@ -391,8 +392,8 @@ var addPoint = function(e) {
 		
 		var newPointObject = {
 			pointId:thisId,
-			pageX:event.pageX,
-			pageY:event.pageY,
+			pageX:xy.pageX,
+			pageY:xy.pageY,
 			xPos:xPos,
 			yPos:yPos,
 			xPointInit:xPointInit,
@@ -495,8 +496,8 @@ function startDrag(e) {
 	// clear isDragging in case it is a normal mousedown
 	isDragging = false;
 	$(window).on('touchmove mousemove', function() {
-		var nowX = event.pageX - initialX;
-		var nowY = event.pageY - initialY;
+		var nowX = xy.pageX - initialX;
+		var nowY = xy.pageY - initialY;
 		if (nowX > drag || nowX < -drag || nowY > drag || nowY < -drag) {
 			isDragging = true;
 			$('#map-inner').css({ 'left':mapX+nowX+'px', 'top':mapY+nowY+'px' });
@@ -519,7 +520,7 @@ var pointerEventToXY = function(e){
 
 function stopDrag() {
 	$(window).unbind("touchmove mousemove");
-    alert('touchend');
+    
 	if (isDragging) { //was a drag event
 		var animateTo = {};
 		var mapDiv = $('#map-inner');
