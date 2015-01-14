@@ -514,11 +514,13 @@ function startDrag(e) {
 		if (nowX > drag || nowX < -drag || nowY > drag || nowY < -drag) {
 			isDragging = true;
 			//$('#map-inner').css({ 'left':mapX+nowX+'px', 'top':mapY+nowY+'px' });
+
 		}		
 	});
 }
 
 function stopDrag(e) {
+	alert('stop');
 	$(window).unbind("touchmove mousemove");
 	
 	if (isDragging) {
