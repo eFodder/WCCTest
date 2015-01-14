@@ -291,7 +291,7 @@ function drawHotspots() {
 			
 			// Check for feeding times
 			var timeText = '';
-			if (hotspot.feedingTimes.length > 0) {
+			if (mapHotspots.feedingTimes && hotspot.feedingTimes.length > 0) {
 				var timeId = getNextFeedingTime(i);
 				if (timeId == null) {
 					timeText = 'No feedings left today';
@@ -373,10 +373,9 @@ function closeHotspot() {
 var addPoint = function(e) {
 	if (!isDragging) {
 		console.log('Adding Point');
-		var xy = pointerEventToXY(e);
 		
-		var xPos = pointAsPercentage(xy.pageX, false);
-		var yPos = pointAsPercentage(xy.pageY, true);
+		var xPos = pointAsPercentage(e.pageX, false);
+		var yPos = pointAsPercentage(e.pageY, true);
 		
 		//Setup working vals
 		var thisId = newHotspot.points.length;
@@ -392,8 +391,8 @@ var addPoint = function(e) {
 		
 		var newPointObject = {
 			pointId:thisId,
-			pageX:xy.pageX,
-			pageY:xy.pageY,
+			pageX:e.pageX,
+			pageY:e.pageY,
 			xPos:xPos,
 			yPos:yPos,
 			xPointInit:xPointInit,
@@ -487,21 +486,27 @@ function createHotspot() {
 
 // This is basically the mousedown event over the map, but we are checking for a drag event based on the distance moved from when we first pressed
 function startDrag(e) {	
-	var xy = pointerEventToXY(e);
-	var initialX = xy.pageX;
-	var initialY = xy.pageY;
+	var touch = e;
+	if (e.type == 'touchstart' || e.type == 'touchmove') {
+		touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+	}
+	var initialX = touch.pageX;
+	var initialY = touch.pageY;
+	
 	var mapX = $('#map-inner').position().left;
 	var mapY = $('#map-inner').position().top;
 	var drag = 5;
 	// clear isDragging in case it is a normal mousedown
 	isDragging = false;
 	$(window).on('touchmove mousemove', function() {
-		nowXY = pointerEventToXY(e);
-		var nowX = nowXY.pageX - initialX;
-		var nowY = nowXY.pageY - initialY;
-		
+		var touch = event;
+		if (event.type == 'touchstart' || event.type == 'touchmove') {
+			touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+		}
+		var nowX = touch.pageX - initialX;
+		var nowY = touch.pageY - initialY;
+				
 		if (nowX > drag || nowX < -drag || nowY > drag || nowY < -drag) {
-			//alert(xy.pageX+' - '+initialX+' - '+nowX);
 			isDragging = true;
 			$('#map-inner').css({ 'left':mapX+nowX+'px', 'top':mapY+nowY+'px' });
 		}		
