@@ -498,7 +498,7 @@ function startDrag() {
 		var nowY = event.pageY - initialY;
 		if (nowX > drag || nowX < -drag || nowY > drag || nowY < -drag) {
 			isDragging = true;
-			alert('touchmove');
+			alert('touchmove drag');
 		
 			$('#map-inner').css({ 'left':mapX+nowX+'px', 'top':mapY+nowY+'px' });
 		}		
