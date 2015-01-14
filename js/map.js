@@ -3,6 +3,9 @@ var currentLongitude = 0;
 var locationLoaded = false;
 var mapSetup = false;
 var zoomLevel = 1;
+var inAdmin = false;
+var isDragging = false;
+var stopClick = false;
 
 var newHotspot = { points:[] };
 
@@ -104,13 +107,14 @@ function resizeMapImage() {
 	mapdata.zoomWidth = mapdata.mapWidth;
 	mapdata.zoomHeight = mapdata.mapHeight;*/
 	
-	$(img).css({ 'width':newWidth, 'height':newHeight, 'position':'relative', 'left':xPos, 'top':yPos });
+	$(img).css({ 'width':newWidth, 'height':newHeight });
+	$('#map-inner').css({ 'position':'relative', 'left':xPos, 'top':yPos, 'width':newWidth+'px', 'height':newHeight+'px' });
 	
 	//Size hotspot holder to match -- we need to do this to catch click events
 	$('#hotspot-holder').css({
 			'position':'absolute',
-			'top':mapdata.yPosition+'px',
-			'left':mapdata.xPosition+'px',
+			'top':'0px',
+			'left':'0px',
 			'width':mapdata.mapWidth+'px',
 			'height':mapdata.mapHeight+'px'
 		});
@@ -118,7 +122,28 @@ function resizeMapImage() {
 	//Map is setup so we can add the hotspots to it - user position does not affect this
 	zoomControls();
 	drawHotspots();
-	
+	// The core details stored active points should be fine but if we have zoomed etc then the points xPoint / yPoint will be off so update these
+	$.each(newHotspot.points, function(index, point) {
+		var xPointInit = percentageAsPoint(point.xPos, false);
+		var yPointInit = percentageAsPoint(point.yPos, true);
+		//Update point data and actual point
+		point.xPointInit = xPointInit;
+		point.yPointInit = yPointInit;
+		point.xPoint = xPointInit - ($('#point' + index).outerWidth() / 2);
+		point.yPoint = yPointInit - ($('#point' + index).outerHeight() / 2);
+		// If there is a line to this point then update that too
+		if ($('#line' + index).length > 0) {
+			//remove so we can redraw
+			$('#line' + index).remove();
+			//Using p1x,p1y,p2x.. to represent point1Xposition, point1YPosition etc. 
+			var p1x = newHotspot.points[index-1].xPointInit;
+			var p1y = newHotspot.points[index-1].yPointInit;
+			
+			drawLineBetweenPoints(index, p1x, p1y, xPointInit, yPointInit);
+		}
+		$('#point' + index).css({ left:point.xPoint+'px', top:point.yPoint+'px' });
+	});
+		
 	mapSetup = true;
 	if (locationLoaded){
 		setLatLongRatios();
@@ -147,7 +172,7 @@ function zoomControls() {
 	mapdata.zoomTop = $('.zoom-in:first').outerHeight();
 	mapdata.zoomBot = $(window).height() - $('.zoom-out:first').outerHeight() - mapdata.zoomIconHeight;	
 	var zoomable = mapdata.zoomBot - mapdata.zoomTop;
-	mapdata.zoomIncrement = zoomable / config.zoomLevels;
+	mapdata.zoomIncrement = zoomable / (config.zoomLevels-1);
 	
 	console.log(mapdata);
 	
@@ -179,10 +204,10 @@ function setLatLongRatios() {
 			&& mapdata.currentLong > mapdata.leftLong
 			&& mapdata.currentLong < mapdata.rightLong) {
 		console.log('within map bounds');
-		var iconTop = mapdata.yPosition + 
+		var iconTop =  
 			((mapdata.currentLat - mapdata.topLat) * mapdata.latRatio) 
 			- ($('#currentUserPosition').outerHeight() / 2);
-		var iconLeft = mapdata.xPosition + 
+		var iconLeft = 
 			((mapdata.currentLong - mapdata.leftLong) * mapdata.longRatio)
 			- ($('#currentUserPosition').outerWidth() / 2);
 		console.log('left = '+iconLeft+'\n top = '+iconTop);
@@ -236,7 +261,7 @@ function drawHotspots() {
 			var pointString = '';
 			//Cycle all points to construct the point string
 			$.each(hotspot.points, function(index, point) {
-				console.log(point);
+				//console.log(point);
 				var xPoint = percentageAsPoint(point.xPos,false);
 				var yPoint = percentageAsPoint(point.yPos,true);
 				if (pointString.length > 0) { pointString += ' '; }
@@ -248,7 +273,12 @@ function drawHotspots() {
 			hotspotPolygon.setAttribute("id", "hotspot-boundry-"+i);
 			hotspotPolygon.setAttribute("class", "hotspot-boundry");
 			hotspotPolygon.setAttribute("points", pointString);
-			hotspotPolygon.setAttribute("onclick", "$('#hotspot-content-"+i+"').popup(); $('#hotspot-content-"+i+"').css('display','block'); $('#hotspot-content-"+i+"').popup('open');");
+			hotspotPolygon.setAttribute("onclick", "" +
+				"if(!isDragging){ " +
+					"$('#hotspot-content-"+i+"').popup(); " +
+					"$('#hotspot-content-"+i+"').css('display','block'); " +
+					"$('#hotspot-content-"+i+"').popup('open'); " +
+				"}");
 			hotspotPolygon.setAttribute("data-rel", "popup");
 			mapSvg.appendChild(hotspotPolygon);
 			
@@ -259,8 +289,24 @@ function drawHotspots() {
 				'</div>'
 			$('#hotspot-content').append(contentPanel);
 			
+			// Check for feeding times
+			var timeText = '';
+			if (hotspot.feedingTimes.length > 0) {
+				var timeId = getNextFeedingTime(i);
+				if (timeId == null) {
+					timeText = 'No feedings left today';
+				} else {
+					timeText = 'Next feeding: '+hotspot.feedingTimes[timeId].time.hour+':'+hotspot.feedingTimes[timeId].time.minute;
+				}
+			}
 			
-			$('#hotspot-titles').append('<div id="hotspot-title-'+i+'" class="hotspot-title">' + hotspot.name + '</div>')
+			var titleHtml = '<div id="hotspot-title-'+i+'" class="hotspot-title">'+
+				'<div class="title">' + hotspot.name + '</div>';
+			if (timeText.length > 0) {
+				titleHtml += '<div class="feeding">' + timeText + '</div>';
+			}
+			titleHtml += '</div>'
+			$('#hotspot-titles').append(titleHtml);
 			var boundry = $('#hotspot-boundry-'+i);
 			$('#hotspot-title-'+i).css({ 
 				'left':boundry.position().left + (boundry[0].getBBox().width / 2) - ($('#hotspot-title-'+i).outerWidth() / 2),
@@ -273,9 +319,26 @@ function drawHotspots() {
 	}
 }
 
-// This function displays the content for individual hotspots - called by the user clicking on a hotspot.
-function showHotspotContent(hotspotIndex) {
+// This function figures out and returns the index of the next feeding time for the selected hotspot - called by drawHotspots
+function getNextFeedingTime(spotId) {
+	var currentTime = new Date();
+	var hours = currentTime.getHours();
+	var minutes = currentTime.getMinutes();
+	var feedId = null;
 	
+	// This relies on the times being in chronological order.  Will write a function to sort them when I add the ability to add a new time	
+	$.each(mapHotspots[spotId].feedingTimes, function(index, feed) {
+		//Check the feeding time is after the current time
+		console.log(feed.time.hour);
+		if (feed.time.hour >= hours) {
+			// Check minutes
+			if (feed.time.minute > minutes) {
+				feedId = index
+				return false;
+			}
+		}
+	});
+	return feedId;
 }
 
 //This function finalises the hotspot being created, adds name and content and cleans up the temporary displayed content - called by the user clicking 'Close Hotspot'
@@ -286,89 +349,104 @@ function closeHotspot() {
     if (hotspotName != null){
        var hotspotContent=prompt("Please enter the content for "+hotspotName,"Hotspot Content");
 	   if (hotspotContent != null) {
-		   //Should now have all the information we need to create a new hotspot, combine it all together and clean up the temporary elements.//
-		   newHotspot.name = hotspotName;
-		   newHotspot.content = hotspotContent;
+			//Should now have all the information we need to create a new hotspot, combine it all together and clean up the temporary elements.//
+			newHotspot.name = hotspotName;
+			newHotspot.content = hotspotContent;
+		
+			mapHotspots.push(newHotspot);
+			
+			console.log('***** new Hotspot *****');
+			console.log(JSON.stringify(newHotspot));
 		   
-		   mapHotspots.push(newHotspot);
-		   
-		   $('#hotspot-holder').off('click');
-		   $('#mappage').css('cursor','auto');
-		   $('#point-controls').css('display','none');
-		   $('.creatingHS').remove();
-		   
-		   drawHotspots();		   
+			$('#hotspot-holder').off('click');
+			$('#mappage').css('cursor','auto');
+			$('#point-controls').css('display','none');
+			$('.creatingHS').remove();
+
+			drawHotspots();	
+			inAdmin = false;
 	   }
    }
 }
 
 //This function adds a hotspot point at the current mouse position. It also draws a line between this point and the next if required
 var addPoint = function(e) {
-	console.log('Adding Point');
+	if (!isDragging) {
+		console.log('Adding Point');
 	
-	var xPos = pointAsPercentage(event.pageX, false);
-	var yPos = pointAsPercentage(event.pageY, true);
-	
-	//Setup working vals
-	var thisId = newHotspot.points.length;
-	
-	//Add visual representation of point to the map
-	var newPoint = $('#map-image').parent().append('<div id="point' + thisId + '" class="new-point creatingHS"></div>');
-	var pointRef = $('#point' + thisId);
-	var xPoint = percentageAsPoint(xPos,false) + mapdata.xPosition - (pointRef.outerWidth() / 2);
-	var yPoint = percentageAsPoint(yPos,true) + mapdata.yPosition - (pointRef.outerHeight() / 2);
-	pointRef.css({ 'left':xPoint+'px','top':yPoint+'px' });
-	
-	var newPointObject = {
-		pointId:thisId,
-		pageX:event.pageX,
-		pageY:event.pageY,
-		xPos:xPos,
-		yPos:yPos,
-		xPoint:xPoint,
-		yPoint:yPoint
-	};
-	newHotspot.points.push(newPointObject);
-	
-	//Draw line between points
-	if (newHotspot.points.length > 1) {
-		//Using p1x,p1y,p2x.. to represent point1Xposition, point1YPosition etc. 
-		var p1x = newHotspot.points[thisId-1].pageX;
-		var p1y = newHotspot.points[thisId-1].pageY;
-		var p2x = newHotspot.points[thisId].pageX;
-		var p2y = newHotspot.points[thisId].pageY;
+		var xPos = pointAsPercentage(event.pageX, false);
+		var yPos = pointAsPercentage(event.pageY, true);
 		
-		console.log(p1x+'-'+p1y+'-'+p2x+'-'+p2y);
+		//Setup working vals
+		var thisId = newHotspot.points.length;
 		
-		//Calculate length, and angle of a line between two points, actually just creates a long thin div and rotates it. - relies on the div having a style of transform-origin: 0 100%; which will ensure that the line rotates from the center of the first point
-		var length = Math.sqrt((p1x-p2x)*(p1x-p2x) + (p1y-p2y)*(p1y-p2y));
-		var angle  = Math.atan2(p2y - p1y, p2x - p1x) * 180 / Math.PI;
-		var transform = 'rotate('+angle+'deg)';
+		//Add visual representation of point to the map
+		var newPoint = $('#map-image').parent().append('<div id="point' + thisId + '" class="new-point creatingHS"></div>');
+		var pointRef = $('#point' + thisId);
+		var xPointInit = percentageAsPoint(xPos,false);
+		var yPointInit = percentageAsPoint(yPos,true)
+		var xPoint = xPointInit - (pointRef.outerWidth() / 2);
+		var yPoint = yPointInit - (pointRef.outerHeight() / 2);
+		pointRef.css({ 'left':xPoint+'px','top':yPoint+'px' });
 		
-		var line = $('<div>')
-        .insertBefore('.new-point:first')
-        .addClass('map-line')
-		.addClass('creatingHS')
-        .css({
-          'position': 'absolute',
-          'transform': transform,
-		  'transform-origin':'0 100%',
-		  'top':p1y+'px',
-		  'left':p1x+'px'
-        })
-        .width(length);
+		var newPointObject = {
+			pointId:thisId,
+			pageX:event.pageX,
+			pageY:event.pageY,
+			xPos:xPos,
+			yPos:yPos,
+			xPointInit:xPointInit,
+			yPointInit:yPointInit,
+			xPoint:xPoint,
+			yPoint:yPoint
+		};
+		newHotspot.points.push(newPointObject);
+		
+		//Draw line between points
+		if (newHotspot.points.length > 1) {
+			//Using p1x,p1y,p2x.. to represent point1Xposition, point1YPosition etc. 
+			var p1x = newHotspot.points[thisId-1].xPointInit;
+			var p1y = newHotspot.points[thisId-1].yPointInit;
+			var p2x = newHotspot.points[thisId].xPointInit;
+			var p2y = newHotspot.points[thisId].yPointInit;
+			
+			drawLineBetweenPoints(thisId, p1x, p1y, p2x, p2y);			
+		}
+		
+		console.log(newHotspot);
 	}
+}
+
+//This function calculates and draws a line between two points
+function drawLineBetweenPoints(id, p1x, p1y, p2x, p2y) {
+	console.log(p1x+'-'+p1y+'-'+p2x+'-'+p2y);
+			
+	//Calculate length, and angle of a line between two points, actually just creates a long thin div and rotates it. - relies on the div having a style of transform-origin: 0 100%; which will ensure that the line rotates from the center of the first point
+	var length = Math.sqrt((p1x-p2x)*(p1x-p2x) + (p1y-p2y)*(p1y-p2y));
+	var angle  = Math.atan2(p2y - p1y, p2x - p1x) * 180 / Math.PI;
+	var transform = 'rotate('+angle+'deg)';
 	
-	console.log(newHotspot);
+	var line = $('<div id="line' + id + '">')
+	.insertBefore('.new-point:first')
+	.addClass('map-line')
+	.addClass('creatingHS')
+	.css({
+	  'position': 'absolute',
+	  'transform': transform,
+	  'transform-origin':'0 100%',
+	  'top':p1y+'px',
+	  'left':p1x+'px'
+	})
+	.width(length);
 }
 
 //This function calculates a point passed as x/y (of the viewport) into the percentage position on the map - called by addPoint
 function pointAsPercentage(point, AsHeight) {
-	var thisPos = mapdata.xPosition;
+	var thisPos = $('#map-inner').position().left;
 	var size = mapdata.mapWidth;
 	
 	if (AsHeight) {
-		thisPos = mapdata.yPosition;
+		thisPos = $('#map-inner').position().top;
 		size = mapdata.mapHeight;
 	}
 	
@@ -384,8 +462,18 @@ function percentageAsPoint(percentage, AsHeight) {
 	return (size / 100) * percentage;
 }
 
+// This function shows/hides the admin menu
+function toggleMenu() {
+	if ($('#controls-menu').css('display') == 'block') {
+		$('#controls-menu').css('display','none');
+	} else {
+		$('#controls-menu').css('display','block');
+	}
+}
+
 // This function sets up the map for admin work to create a new hotspot - called by user clicking 'Create Hotspot'
 function createHotspot() {
+	inAdmin = true;
 	$('#mappage').css('cursor','crosshair');
 	toggleMenu();
 	
@@ -396,6 +484,58 @@ function createHotspot() {
 	$('#hotspot-holder').on('click',addPoint);
 }
 
+// This is basically the mousedown event over the map, but we are checking for a drag event based on the distance moved from when we first pressed
+function startDrag() {	
+	var initialX = event.pageX;
+	var initialY = event.pageY;
+	var mapX = $('#map-inner').position().left;
+	var mapY = $('#map-inner').position().top;
+	var drag = 5;
+	// clear isDragging in case it is a normal mousedown
+	isDragging = false;
+	$(window).mousemove(function() {
+		var nowX = event.pageX - initialX;
+		var nowY = event.pageY - initialY;
+		if (nowX > drag || nowX < -drag || nowY > drag || nowY < -drag) {
+			isDragging = true;
+			$('#map-inner').css({ 'left':mapX+nowX+'px', 'top':mapY+nowY+'px' });
+		}		
+	});
+}
+
+function stopDrag() {
+	$(window).unbind("mousemove");
+    if (isDragging) { //was a drag event
+		var animateTo = {};
+		var mapDiv = $('#map-inner');
+		// Narrower than viewport then centralise
+		if(mapDiv.width() < $(window).width()) {
+			animateTo.left = ($(window).width() - mapDiv.width()) / 2 +'px';
+		} else {
+			// white space to left so move to edge, if to right then move to right edge
+			if (mapDiv.position().left > 0) { 
+				animateTo.left = '0px'; 
+			} else if (($(window).width() - mapDiv.position().left) > mapDiv.width()) {
+				animateTo.left = $(window).width() - mapDiv.width();
+			}			
+		}
+		
+		// Shorter than viewport then centralise
+		if(mapDiv.height() < $(window).height()) {
+			animateTo.top = ($(window).height() - mapDiv.height()) / 2 +'px';
+		} else {
+			// white space to top so move to top, if to bottom then move to bottom edge
+			if (mapDiv.position().top > 0) { 
+				animateTo.top = '0px'; 
+			} else if (($(window).height() - mapDiv.position().top) > mapDiv.height()) {
+				animateTo.top = $(window).height() - mapDiv.height();
+			}			
+		}
+		// Perform animation
+		$('#map-inner').animate(animateTo);
+    }
+}
+
 // Initial function
 function setupMap() {
 	//Load image	
@@ -404,6 +544,10 @@ function setupMap() {
 	getCurrentPosition();
 	
 	$('#map-image').load(resizeMapImage);
+	
+	// Set dragging actions - these will be disabled when in admin
+	$('#map-inner').on('touchstart mousedown',startDrag);
+	$('#map-inner').on('touchend mouseup',stopDrag);
 	
 	$(window).resize(resizeMapImage);
 }
