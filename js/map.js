@@ -489,6 +489,7 @@ var initX;
 var initY;
 var finX;
 var finY;
+var touchDrag = false;
 
 function startDrag(e) {	
 	if( navigator.userAgent.match(/Android/i) ) {
@@ -511,18 +512,16 @@ function startDrag(e) {
 	isDragging = false;
 	$(window).on('touchmove mousemove', function() {
 		var touch = event;
-		if (event.type == 'touchstart' || event.type == 'touchmove') {
+		if (event.type == 'touchmove') {
 			touch = event.touches[0] || event.changedTouches[0];
+			touchDrag = true;
 		}
 		var nowX = touch.pageX - initialX;
 		var nowY = touch.pageY - initialY;
 			
 		if (nowX > drag || nowX < -drag || nowY > drag || nowY < -drag) {
 			isDragging = true;
-			finX = nowX;
-			finY = nowY;
-			alert('dragging='+isDragging);
-			
+						
 			//$('#map-inner').css({ 'left':mapX+nowX+'px', 'top':mapY+nowY+'px' });
 
 		}		
@@ -531,10 +530,19 @@ function startDrag(e) {
 
 function stopDrag(e) {
 	$(window).unbind("touchmove mousemove");
-	alert('x='+finX+' - y='+finY+' - isDragging='+isDragging);
-	if (isDragging) {
-		alert('x='+finX+' - y='+finY);
+	alert('x='+finX+' - y='+finY+' - isDragging='+isDragging+' - touchDrag='+touchDrag);
+	
+	if (touchDrag) {
+		touchDrag=false;
 		
+		var touch = event;
+		if (event.type == 'touchend') {
+			touch = event.touches[0] || event.changedTouches[0];
+		}
+		
+		finX = touch.pageX;
+		finY = touch.pageY;
+		alert('x='+finX+' - y='+finY+' - isDragging='+isDragging+' - touchDrag='+touchDrag);
 	}
     
 	/*if (isDragging) { //was a drag event
