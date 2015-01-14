@@ -492,10 +492,6 @@ var finY;
 var touchDrag = false;
 
 function startDrag(e) {	
-	if( navigator.userAgent.match(/Android/i) ) {
-		e.preventDefault();
-	}
-	
 	var touch = e;
 	if (e.type == 'touchstart' || e.type == 'touchmove') {
 		touch = e.touches[0] || e.changedTouches[0];
@@ -512,7 +508,7 @@ function startDrag(e) {
 	isDragging = false;
 	$(window).on('touchmove mousemove', function() {
 		var touch = event;
-		alert('touchmove');
+		//alert('touchmove');
 		if (event.type == 'touchmove') {
 			touch = event.touches[0] || event.changedTouches[0];
 			touchDrag = true;
@@ -524,8 +520,7 @@ function startDrag(e) {
 		if (nowX > drag || nowX < -drag || nowY > drag || nowY < -drag) {
 			isDragging = true;
 						
-			//$('#map-inner').css({ 'left':mapX+nowX+'px', 'top':mapY+nowY+'px' });
-
+			$('#map-inner').css({ 'left':mapX+nowX+'px', 'top':mapY+nowY+'px' });
 		}		
 	});
 }
