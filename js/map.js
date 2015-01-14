@@ -489,7 +489,6 @@ function startDrag(e) {
 	var touch = e;
 	if (e.type == 'touchstart' || e.type == 'touchmove') {
 		touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-		alert(touch.pageX);
 	}
 	var initialX = touch.pageX;
 	var initialY = touch.pageY;
@@ -506,6 +505,7 @@ function startDrag(e) {
 		}
 		var nowX = touch.pageX - initialX;
 		var nowY = touch.pageY - initialY;
+		alert(nowX);
 				
 		if (nowX > drag || nowX < -drag || nowY > drag || nowY < -drag) {
 			isDragging = true;
