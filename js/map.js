@@ -526,7 +526,7 @@ function startDrag(e) {
 
 function stopDrag(e) {
 	$(window).unbind("touchmove mousemove");
-	
+	alert('x='+finX+' - y='+finY+' - isDragging');
 	if (isDragging) {
 		alert('x='+finX+' - y='+finY);
 		
