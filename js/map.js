@@ -521,6 +521,7 @@ function startDrag(e) {
 			isDragging = true;
 			finX = nowX;
 			finY = nowY;
+			alert('dragging='+isDragging);
 			
 			//$('#map-inner').css({ 'left':mapX+nowX+'px', 'top':mapY+nowY+'px' });
 
