@@ -486,12 +486,9 @@ function createHotspot() {
 
 // This is basically the mousedown event over the map, but we are checking for a drag event based on the distance moved from when we first pressed
 function startDrag(e) {	
-	var touch = e;
-	if (e.type == 'touchstart' || e.type == 'touchmove') {
-		touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-	}
-	var initialX = touch.pageX;
-	var initialY = touch.pageY;
+	
+	var initialX = e.pageX;
+	var initialY = e.pageY;
 	
 	var mapX = $('#map-inner').position().left;
 	var mapY = $('#map-inner').position().top;
@@ -499,12 +496,9 @@ function startDrag(e) {
 	// clear isDragging in case it is a normal mousedown
 	isDragging = false;
 	$(window).on('touchmove mousemove', function() {
-		var touch = event;
-		if (event.type == 'touchstart' || event.type == 'touchmove') {
-			touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
-		}
-		var nowX = touch.pageX - initialX;
-		var nowY = touch.pageY - initialY;
+		
+		var nowX = event.pageX - initialX;
+		var nowY = event.pageY - initialY;
 			
 		if (nowX > drag || nowX < -drag || nowY > drag || nowY < -drag) {
 			isDragging = true;
@@ -558,8 +552,32 @@ function setupMap() {
 	$('#map-image').load(resizeMapImage);
 	
 	// Set dragging actions - these will be disabled when in admin
-	$('#map-inner').on('touchstart mousedown',startDrag);
-	$('#map-inner').on('touchend mouseup',stopDrag);
+	$('#map-inner').on('mousedown',startDrag);
+	$('#map-inner').on('mouseup',stopDrag);
 		
 	$(window).resize(resizeMapImage);
+}
+
+function touchHandler(event) {
+    var touch = event.changedTouches[0];
+
+    var simulatedEvent = document.createEvent("MouseEvent");
+        simulatedEvent.initMouseEvent({
+        touchstart: "mousedown",
+        touchmove: "mousemove",
+        touchend: "mouseup"
+    }[event.type], true, true, window, 1,
+        touch.screenX, touch.screenY,
+        touch.clientX, touch.clientY, false,
+        false, false, false, 0, null);
+
+    touch.target.dispatchEvent(simulatedEvent);
+    event.preventDefault();
+}
+
+function init() {
+    document.addEventListener("touchstart", touchHandler, true);
+    document.addEventListener("touchmove", touchHandler, true);
+    document.addEventListener("touchend", touchHandler, true);
+    document.addEventListener("touchcancel", touchHandler, true);
 }
