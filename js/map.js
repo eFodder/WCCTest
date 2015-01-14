@@ -489,6 +489,7 @@ function startDrag(e) {
 	var touch = e;
 	if (e.type == 'touchstart' || e.type == 'touchmove') {
 		touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+		alert(touch.pageX);
 	}
 	var initialX = touch.pageX;
 	var initialY = touch.pageY;
