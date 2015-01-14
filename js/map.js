@@ -493,8 +493,8 @@ function startDrag() {
 	var drag = 5;
 	// clear isDragging in case it is a normal mousedown
 	isDragging = false;
-	alert('touchstart');
 	$(window).on('touchmove mousemove', function() {
+		alert('touchmove');
 		var nowX = event.pageX - initialX;
 		var nowY = event.pageY - initialY;
 		if (nowX > drag || nowX < -drag || nowY > drag || nowY < -drag) {
