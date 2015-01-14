@@ -512,9 +512,11 @@ function startDrag(e) {
 	isDragging = false;
 	$(window).on('touchmove mousemove', function() {
 		var touch = event;
+		alert('touchmove');
 		if (event.type == 'touchmove') {
 			touch = event.touches[0] || event.changedTouches[0];
 			touchDrag = true;
+			alert('drag');
 		}
 		var nowX = touch.pageX - initialX;
 		var nowY = touch.pageY - initialY;
