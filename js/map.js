@@ -493,7 +493,7 @@ function startDrag() {
 	var drag = 5;
 	// clear isDragging in case it is a normal mousedown
 	isDragging = false;
-	//alert('touchstart');
+	alert('touchstart');
 	$(window).on('touchmove mousemove', function() {
 		var nowX = event.pageX - initialX;
 		var nowY = event.pageY - initialY;
@@ -549,8 +549,6 @@ function setupMap() {
 	// Set dragging actions - these will be disabled when in admin
 	$('#map-inner').on('touchstart mousedown',startDrag);
 	$('#map-inner').on('touchend mouseup',stopDrag);
-	
-	$('#map-inner').on('touchstart',function() { alert('touchstart');});
-	
+		
 	$(window).resize(resizeMapImage);
 }
