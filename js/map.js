@@ -520,9 +520,10 @@ function startDrag(e) {
 
 function stopDrag(e) {
 	$(window).unbind("touchmove mousemove");
+	
 	if (isDragging) {
 		var touch = event;
-		if (event.type == 'touchstart' || event.type == 'touchmove') {
+		if (event.type == 'touchend') {
 			touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
 		}
 		var nowX = touch.pageX - initX;
