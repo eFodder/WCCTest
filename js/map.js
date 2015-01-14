@@ -493,7 +493,8 @@ function startDrag() {
 	var drag = 5;
 	// clear isDragging in case it is a normal mousedown
 	isDragging = false;
-	$(window).mousemove(function() {
+	//alert('touchstart');
+	$(window).on('touchmove mousemove', function() {
 		var nowX = event.pageX - initialX;
 		var nowY = event.pageY - initialY;
 		if (nowX > drag || nowX < -drag || nowY > drag || nowY < -drag) {
@@ -504,7 +505,7 @@ function startDrag() {
 }
 
 function stopDrag() {
-	$(window).unbind("mousemove");
+	$(window).unbind("touchmove mousemove");
     if (isDragging) { //was a drag event
 		var animateTo = {};
 		var mapDiv = $('#map-inner');
