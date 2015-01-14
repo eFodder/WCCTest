@@ -549,5 +549,7 @@ function setupMap() {
 	$('#map-inner').on('touchstart mousedown',startDrag);
 	$('#map-inner').on('touchend mouseup',stopDrag);
 	
+	$('#map-inner').on('touchstart',function() { alert('touchstart');});
+	
 	$(window).resize(resizeMapImage);
 }
