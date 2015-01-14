@@ -494,11 +494,12 @@ function startDrag() {
 	// clear isDragging in case it is a normal mousedown
 	isDragging = false;
 	$(window).on('touchmove mousemove', function() {
-		alert('touchmove');
 		var nowX = event.pageX - initialX;
 		var nowY = event.pageY - initialY;
 		if (nowX > drag || nowX < -drag || nowY > drag || nowY < -drag) {
 			isDragging = true;
+			alert('touchmove');
+		
 			$('#map-inner').css({ 'left':mapX+nowX+'px', 'top':mapY+nowY+'px' });
 		}		
 	});
@@ -506,7 +507,8 @@ function startDrag() {
 
 function stopDrag() {
 	$(window).unbind("touchmove mousemove");
-    if (isDragging) { //was a drag event
+    alert('touchend');
+	if (isDragging) { //was a drag event
 		var animateTo = {};
 		var mapDiv = $('#map-inner');
 		// Narrower than viewport then centralise
