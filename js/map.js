@@ -516,7 +516,7 @@ function startDrag(e) {
 function stopDrag() {
 	$(window).unbind("touchmove mousemove");
     
-	if (isDragging) { //was a drag event
+	/*if (isDragging) { //was a drag event
 		var animateTo = {};
 		alert('stop drag');
 		var mapDiv = $('#map-inner');
@@ -545,7 +545,7 @@ function stopDrag() {
 		}
 		// Perform animation
 		$('#map-inner').animate(animateTo);
-    }
+    }*/
 }
 
 // Initial function
