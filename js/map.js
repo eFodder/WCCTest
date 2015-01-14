@@ -486,6 +486,7 @@ function createHotspot() {
 
 // This is basically the mousedown event over the map, but we are checking for a drag event based on the distance moved from when we first pressed
 function startDrag(e) {	
+	alert(e.originalEvent.touches[0].pageX+' - '+e.originalEvent.changedTouches[0].pageX);
 	var xy = pointerEventToXY(e);
 	var initialX = xy.pageX;
 	var initialY = xy.pageY;
@@ -498,7 +499,6 @@ function startDrag(e) {
 		var nowX = event.pageX - initialX;
 		var nowY = event.pageY - initialY;
 		alert('pagex='+event.pageX+' - initialx='+initialX);
-		alert('nowx='+nowX+' - nowy='+nowY+' - drag='+drag);
 		if (nowX > drag || nowX < -drag || nowY > drag || nowY < -drag) {
 			isDragging = true;
 			alert('touchmove drag');
