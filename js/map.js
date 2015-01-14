@@ -505,8 +505,7 @@ function startDrag(e) {
 		}
 		var nowX = touch.pageX - initialX;
 		var nowY = touch.pageY - initialY;
-		alert(nowX);
-				
+			
 		if (nowX > drag || nowX < -drag || nowY > drag || nowY < -drag) {
 			isDragging = true;
 			$('#map-inner').css({ 'left':mapX+nowX+'px', 'top':mapY+nowY+'px' });
@@ -514,24 +513,12 @@ function startDrag(e) {
 	});
 }
 
-var pointerEventToXY = function(e){
-	var out = {pageX:0, pageY:0};
-	if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel'){
-		var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-		out.pageX = touch.pageX;
-		out.pageY = touch.pageY;
-	} else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover'|| e.type=='mouseout' || e.type=='mouseenter' || e.type=='mouseleave') {
-		out.pageX = e.pageX;
-		out.pageY = e.pageY;
-	}
-	return out;
-};
-
 function stopDrag() {
 	$(window).unbind("touchmove mousemove");
     
 	if (isDragging) { //was a drag event
 		var animateTo = {};
+		alert('stop drag');
 		var mapDiv = $('#map-inner');
 		// Narrower than viewport then centralise
 		if(mapDiv.width() < $(window).width()) {
