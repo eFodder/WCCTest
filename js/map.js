@@ -485,9 +485,10 @@ function createHotspot() {
 }
 
 // This is basically the mousedown event over the map, but we are checking for a drag event based on the distance moved from when we first pressed
-function startDrag() {	
-	var initialX = event.pageX;
-	var initialY = event.pageY;
+function startDrag(e) {	
+	var xy = pointerEventToXY(e);
+	var initialX = xy.pageX;
+	var initialY = xy.pageY;
 	var mapX = $('#map-inner').position().left;
 	var mapY = $('#map-inner').position().top;
 	var drag = 5;
@@ -506,6 +507,19 @@ function startDrag() {
 		}		
 	});
 }
+
+var pointerEventToXY = function(e){
+	var out = {x:0, y:0};
+	if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel'){
+		var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+		out.pageX = touch.pageX;
+		out.pageY = touch.pageY;
+	} else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover'|| e.type=='mouseout' e.type=='mouseenter' || e.type=='mouseleave') {
+		out.pageX = e.pageX;
+		out.pageY = e.pageY;
+	}
+	return out;
+};
 
 function stopDrag() {
 	$(window).unbind("touchmove mousemove");
