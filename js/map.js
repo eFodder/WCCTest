@@ -496,6 +496,7 @@ function startDrag() {
 	$(window).on('touchmove mousemove', function() {
 		var nowX = event.pageX - initialX;
 		var nowY = event.pageY - initialY;
+		alert('nowx='+nowX+' - nowy='+nowY+' - drag='+drag);
 		if (nowX > drag || nowX < -drag || nowY > drag || nowY < -drag) {
 			isDragging = true;
 			alert('touchmove drag');
