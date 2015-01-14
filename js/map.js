@@ -514,7 +514,7 @@ var pointerEventToXY = function(e){
 		var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
 		out.pageX = touch.pageX;
 		out.pageY = touch.pageY;
-	} else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover'|| e.type=='mouseout' e.type=='mouseenter' || e.type=='mouseleave') {
+	} else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover'|| e.type=='mouseout' || e.type=='mouseenter' || e.type=='mouseleave') {
 		out.pageX = e.pageX;
 		out.pageY = e.pageY;
 	}
