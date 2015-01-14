@@ -491,9 +491,13 @@ var finX;
 var finY;
 
 function startDrag(e) {	
+	if( navigator.userAgent.match(/Android/i) ) {
+		e.preventDefault();
+	}
+	
 	var touch = e;
 	if (e.type == 'touchstart' || e.type == 'touchmove') {
-		touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+		touch = e.touches[0] || e.changedTouches[0];
 	}
 	var initialX = touch.pageX;
 	var initialY = touch.pageY;
@@ -508,7 +512,7 @@ function startDrag(e) {
 	$(window).on('touchmove mousemove', function() {
 		var touch = event;
 		if (event.type == 'touchstart' || event.type == 'touchmove') {
-			touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+			touch = event.touches[0] || event.changedTouches[0];
 		}
 		var nowX = touch.pageX - initialX;
 		var nowY = touch.pageY - initialY;
@@ -526,7 +530,7 @@ function startDrag(e) {
 
 function stopDrag(e) {
 	$(window).unbind("touchmove mousemove");
-	alert('x='+finX+' - y='+finY+' - isDragging');
+	alert('x='+finX+' - y='+finY+' - isDragging='+isDragging);
 	if (isDragging) {
 		alert('x='+finX+' - y='+finY);
 		
